@@ -92,16 +92,17 @@ export function Orders(){
 
     const handleOrderItem=()=>{
         orderItem();
+        setNum(1)
     };
 
     const handleIdConfirmClick=()=>{
         fetchOrdersByMemberId(member_id);
-        setNum(1);  //orderList1을 출력하기 위해
+        setNum(1);  //orderList2을 출력하기 위해
     };
 
     const handleOrderNumInput=()=>{
         fetchOrderByOrderId(order_id);
-        setNum(0);  //orderList2를 출력하기 위해
+        setNum(0);  //orderList1를 출력하기 위해
     }
 
     // useEffect(()=>{
