@@ -11,8 +11,8 @@ export function Orders(){
     const [order_id,setOrderId]=useState('');
     const [status, setStatus] = useState('');
     const [count,setCount]=useState('');
-    const [items, setItems] = useState([{ item_id: '', count: '' }]);
-   // const [ordersByMember, setOrdersByMember] = useState({member_id: null,orders:[]});
+    //const [items, setItems] = useState([{ item_id: '', count: '' }]);
+    //const [ordersByMember, setOrdersByMember] = useState({member_id: null,orders:[]});
     const [ordersByMember, setOrdersByMember] = useState('');
     const [orderById, setOrderById] = useState('');
     const [num,setNum]=useState(0);

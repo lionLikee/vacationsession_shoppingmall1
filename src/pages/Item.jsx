@@ -9,6 +9,8 @@ export function Item(){
     const [item_name,setName]=useState("");
     const [stock_quantity,setQuantity]=useState(0);
     const [item_price,setPrice]=useState(0);
+    const [editingItemId, setEditingItemId] = useState(null);
+    const[num,setNum]=useState(0);
 
     const fetchItem=async()=>{
         try{
@@ -48,16 +50,42 @@ export function Item(){
         }
     }
 
+    const patchItems=async(itemId)=>{
+        try{
+            const updatedItem={item_name,stock_quantity,item_price};
+            const response=await axiosInstance.patch(`/items/${itemId}`,updatedItem);
+            console.log(response);
+            fetchItemById(itemId);
+
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    const deleteItems=async(itemId)=>{
+        try{
+            const response=await axiosInstance.delete(`/items/${itemId}`);
+            console.log(response);
+            fetchItem();
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
     const handleInputChange = (e) => {
         setId(e.target.value);
     };
 
     const handleConfirmClick = () => {
         fetchItemById(id);
+        setId('');
     };
 
     const handleSearchEveryClick = () => {
         fetchItem();
+        setNum(0);
     };
 
     const handleNameChange = (e) => {
@@ -74,7 +102,27 @@ export function Item(){
 
     const handleRegisterClick = () => {
         registerItem();
+        setName('');
+        setQuantity('');
+        setPrice('');
     };
+
+    const handlePatchClick=(itemId)=>{
+        setEditingItemId(itemId);
+        fetchItemById(itemId);
+        setNum(1);
+    }
+
+    const handleUpdateClick=()=>{
+        patchItems(editingItemId)
+        setName('');
+        setQuantity('');
+        setPrice('');
+    }
+
+    const handleDeleteClick=(itemId)=>{
+        deleteItems(itemId);
+    }
 
     useEffect(() => {
         fetchItem(); // 컴포넌트가 처음 마운트될 때 전체 목록 가져오기
@@ -88,25 +136,39 @@ export function Item(){
 
     return(
     <>
-        <div className="inputFind">
+        {num===0 && (
+            <div className="inputFind">
             
-            <input type="text" className="findInput" placeholder="입력" value={id} onChange={handleInputChange}></input>
-            <button className="confirmBtn" onClick={handleConfirmClick}>확인</button>
-            
-        </div>
+                <input type="text" className="findInput" placeholder="입력" value={id} onChange={handleInputChange}></input>
+                <button className="confirmBtn" onClick={handleConfirmClick}>확인</button>
+             
+            </div>
+        )}
 
         <div className="searchEvery">
             <button className="searchEveryBtn" onClick={handleSearchEveryClick}>전체검색</button>
         </div>
 
-        <div className="register">
+        {num===0 && (
+             <div className="register">
             
-            <input type="text" className="nameRegister" placeholder="상품입력" value={item_name} onChange={handleNameChange} ></input>
-            <input type="text" className="quantityRegister" placeholder="수량입력" value={stock_quantity} onChange={handleQuantityChange}></input>
-            <input type="text" className="priceRegister" placeholder="가격입력" value={item_price} onChange={handlePriceChange}></input>
-            <button className="registerBtn" onClick={handleRegisterClick}>상품등록</button>
-            
-        </div>
+             <input type="text" className="nameRegister" placeholder="상품입력" value={item_name} onChange={handleNameChange} ></input>
+             <input type="text" className="quantityRegister" placeholder="수량입력" value={stock_quantity} onChange={handleQuantityChange}></input>
+             <input type="text" className="priceRegister" placeholder="가격입력" value={item_price} onChange={handlePriceChange}></input>
+             <button className="registerBtn" onClick={handleRegisterClick}>상품등록</button>
+             
+         </div>
+ 
+        )}
+
+        {editingItemId && num===1 && (
+            <div className="update">
+                <input type="text" className="nameUpdate" placeholder="상품입력" value={item_name} onChange={handleNameChange} ></input>
+                <input type="text" className="quantityUpdate" placeholder="수량입력" value={stock_quantity} onChange={handleQuantityChange}></input>
+                <input type="text" className="priceUpdate" placeholder="가격입력" value={item_price} onChange={handlePriceChange}></input>
+                <button className="updateBtn" onClick={handleUpdateClick}>아이템정보수정</button>
+            </div>
+        )}
 
         <div className="itemList">
                 {items.map((item) => (
@@ -115,6 +177,8 @@ export function Item(){
                         <p>이름: {item.item_name}</p>
                         <p>수량: {item.stock_quantity}</p>
                         <p>가격: {item.item_price}</p>
+                        <button className="patchBtn" onClick={()=>handlePatchClick(item.id)}>수정</button>
+                        <button className="deleteBtn" onClick={()=>handleDeleteClick(item.id)}>삭제</button>
                         <br></br>
                     </div>
                 ))}

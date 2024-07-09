@@ -124,19 +124,19 @@ export function Members(){
     };
 
     const handlePatchClick=(memberId)=>{
-        setEditingMemberId(memberId);
+        setEditingMemberId(memberId); //수정해줄 멤버 아이디를 targeting
         const member = members.find(member => member.id === memberId); // 입력칸에 원래의 데이터를 삽입시켜주기 위해
         setName(member.name);
         setCity(member.address.city);
         setStreet(member.address.street);
         setZipcode(member.address.zipcode);
-        fetchMembersById(memberId);
+        fetchMembersById(memberId); //수정할 대상만 화면에 출력하기 위해 fetch
         setNum(1);
     }
 
     const handleUpdateClick=()=>{
         patchMembers(editingMemberId);
-        setName('');
+        setName('');  //입력칸 비우기
         setCity('');
         setStreet('');
         setZipcode('');
